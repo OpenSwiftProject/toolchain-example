@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-IMAGE="${OPEN_SWIFT_TOOLCHAIN_IMAGE:-openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64}"
+IMAGE="${OPEN_SWIFT_TOOLCHAIN_IMAGE:-ghcr.io/openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64}"
 PLATFORM="${OPEN_SWIFT_DOCKER_PLATFORM:-linux/arm64}"
 BASE_IMAGE="${OPEN_SWIFT_BASE_IMAGE:-gnustep-bootstrap-ubuntu24}"
 TOOLCHAIN_DOCKER_REPO="${OPEN_SWIFT_TOOLCHAIN_DOCKER_REPO:-https://github.com/OpenSwiftProject/toolchain-docker.git}"
@@ -35,8 +35,8 @@ Examples:
 
   scripts/run-demokit.sh \
     --local-artifacts \
-    --toolchain /Volumes/GNUStepProject/swift-toolchain-root/usr \
-    --prefix /Volumes/GNUStepProject/prefix \
+    --toolchain /Volumes/Workspace/OpenSwiftProject/swift-toolchain-root/usr \
+    --prefix /Volumes/Workspace/OpenSwiftProject/prefix \
     --base-image gnustep-bootstrap-ubuntu24
 EOF
 }
@@ -140,4 +140,3 @@ DOCKER_ARGS+=(
 )
 
 docker "${DOCKER_ARGS[@]}"
-

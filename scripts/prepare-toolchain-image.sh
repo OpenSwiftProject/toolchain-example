@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-IMAGE="${1:-${OPEN_SWIFT_TOOLCHAIN_IMAGE:-openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64}}"
+IMAGE="${1:-${OPEN_SWIFT_TOOLCHAIN_IMAGE:-ghcr.io/openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64}}"
 REPO_URL="${2:-${OPEN_SWIFT_TOOLCHAIN_DOCKER_REPO:-https://github.com/OpenSwiftProject/toolchain-docker.git}}"
 CHECKOUT_DIR="${OPEN_SWIFT_TOOLCHAIN_DOCKER_CHECKOUT:-$ROOT_DIR/.cache/toolchain-docker}"
 
@@ -22,4 +22,3 @@ else
   echo "error: $CHECKOUT_DIR does not contain scripts/build-image.sh or Dockerfile" >&2
   exit 1
 fi
-

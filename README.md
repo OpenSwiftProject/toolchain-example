@@ -6,7 +6,7 @@ It builds a tiny Objective-C GNUstep module, imports it from Swift with `-enable
 
 ## Quick Start
 
-Once the alpha image is published:
+Use the primary GHCR alpha image:
 
 ```sh
 git clone https://github.com/OpenSwiftProject/toolchain-example.git
@@ -17,7 +17,7 @@ cd toolchain-example
 Default image:
 
 ```text
-openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64
+ghcr.io/openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64
 ```
 
 Expected output:
@@ -30,13 +30,13 @@ Swift saw item count: 4
 
 ## Run With Local Artifacts
 
-Until the Docker Hub image is published, point the example at a locally built Swift toolchain and GNUstep prefix:
+If you have a locally built Swift toolchain and GNUstep prefix, point the example at those artifacts:
 
 ```sh
 ./scripts/run-demokit.sh \
   --local-artifacts \
-  --toolchain /Volumes/GNUStepProject/swift-toolchain-root/usr \
-  --prefix /Volumes/GNUStepProject/prefix \
+  --toolchain /Volumes/Workspace/OpenSwiftProject/swift-toolchain-root/usr \
+  --prefix /Volumes/Workspace/OpenSwiftProject/prefix \
   --base-image gnustep-bootstrap-ubuntu24
 ```
 
@@ -55,11 +55,11 @@ The toolchain Docker build should live in a separate repository:
 OpenSwiftProject/toolchain-docker
 ```
 
-Planned image names:
+Primary GHCR image names:
 
 ```text
-openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64
-openswiftproject/swift-gnustep-toolchain:6.3-alpha
+ghcr.io/openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64
+ghcr.io/openswiftproject/swift-gnustep-toolchain:6.3-alpha
 ```
 
 When that repository exists, this example can build or refresh the image before running:
@@ -73,7 +73,7 @@ When that repository exists, this example can build or refresh the image before 
 You can override the image name:
 
 ```sh
-OPEN_SWIFT_TOOLCHAIN_IMAGE=openswiftproject/swift-gnustep-toolchain:6.3-alpha \
+OPEN_SWIFT_TOOLCHAIN_IMAGE=ghcr.io/openswiftproject/swift-gnustep-toolchain:6.3-alpha \
   ./scripts/run-demokit.sh
 ```
 
@@ -121,4 +121,3 @@ scripts/run-demokit.sh
 scripts/build-demokit-in-container.sh
 scripts/prepare-toolchain-image.sh
 ```
-

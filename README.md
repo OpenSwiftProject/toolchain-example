@@ -20,6 +20,16 @@ Default image:
 ghcr.io/openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64
 ```
 
+If GHCR is slow from your network, you can rewrite the default image through a GHCR-compatible mirror host:
+
+```sh
+./scripts/run-demokit.sh --ghcr-mirror <ghcr_mirror>
+```
+
+The same setting is available as an environment variable: `OPEN_SWIFT_GHCR_MIRROR=<ghcr_mirror>`.
+
+For example, users in mainland China may try: `ghcr.nju.edu.cn`.
+
 Expected output:
 
 ```text

@@ -8,6 +8,7 @@ PLATFORM="${OPEN_SWIFT_DOCKER_PLATFORM:-linux/arm64}"
 BASE_IMAGE="${OPEN_SWIFT_BASE_IMAGE:-gnustep-bootstrap-ubuntu24}"
 TOOLCHAIN_DOCKER_REPO="${OPEN_SWIFT_TOOLCHAIN_DOCKER_REPO:-https://github.com/OpenSwiftProject/toolchain-docker.git}"
 PULL_POLICY="${OPEN_SWIFT_DOCKER_PULL:-missing}"
+GHCR_MIRROR="${OPEN_SWIFT_GHCR_MIRROR:-}"
 LOCAL_ARTIFACTS=0
 BUILD_IMAGE=0
 HOST_TOOLCHAIN="${OPEN_SWIFT_HOST_TOOLCHAIN:-}"
@@ -21,6 +22,7 @@ Usage:
 Options:
   --image IMAGE                 Docker toolchain image to run.
   --platform PLATFORM           Docker platform. Default: linux/arm64.
+  --ghcr-mirror HOST            Rewrite ghcr.io images through a registry mirror.
   --no-pull                     Do not ask Docker to pull missing images.
   --build-image                 Build the toolchain image from toolchain-docker before running.
   --toolchain-docker-repo URL   Git URL for OpenSwiftProject/toolchain-docker.
@@ -49,6 +51,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --platform)
       PLATFORM="$2"
+      shift 2
+      ;;
+    --ghcr-mirror)
+      GHCR_MIRROR="$2"
       shift 2
       ;;
     --no-pull)
@@ -90,6 +96,13 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [[ -n "$GHCR_MIRROR" && "$IMAGE" == ghcr.io/* ]]; then
+  GHCR_MIRROR="${GHCR_MIRROR#https://}"
+  GHCR_MIRROR="${GHCR_MIRROR#http://}"
+  GHCR_MIRROR="${GHCR_MIRROR%/}"
+  IMAGE="$GHCR_MIRROR/${IMAGE#ghcr.io/}"
+fi
 
 if [[ "$BUILD_IMAGE" -eq 1 ]]; then
   "$ROOT_DIR/scripts/prepare-toolchain-image.sh" "$IMAGE" "$TOOLCHAIN_DOCKER_REPO"

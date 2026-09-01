@@ -100,9 +100,8 @@ echo "== Build Swift executable =="
   -Xlinker -rpath \
   -Xlinker "$PREFIX/lib" \
   "$BUILD_DIR/DarwinSelectorRefs.o" \
-  "$DEMO_DIR/main.swift" \
+  "$ROOT_DIR/Sources/GNUstepObjCDemo/main.swift" \
   -o "$BUILD_DIR/GNUstepObjCDemo"
 
 echo "== Run DemoKit =="
 "$BUILD_DIR/GNUstepObjCDemo"
-

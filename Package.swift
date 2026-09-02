@@ -71,5 +71,12 @@ let package = Package(
         .linkedLibrary("m"),
       ]
     ),
+    .testTarget(
+      // Deliberately dependency-free: generated SwiftPM test targets do not
+      // yet inherit the GNUstep Objective-C importer settings above. The
+      // integration tests launch the built executable instead.
+      name: "GNUstepObjCDemoTests",
+      path: "Tests/GNUstepObjCDemoTests"
+    ),
   ]
 )

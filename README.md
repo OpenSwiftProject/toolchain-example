@@ -38,6 +38,35 @@ Swift saw: Hello from GNUstep Objective-C
 Swift saw item count: 4
 ```
 
+## Swift Package Experiment
+
+`Package.swift` expresses the demo as the same two-target shape used by a
+normal Darwin package:
+
+- `GNUstepObjCDemo`, a Swift executable target
+- `ObjCDemoKit`, an Objective-C/Clang target used by the executable
+
+It also includes `GNUstepObjCDemoTests`, a Swift integration-test target. Its
+XCTest and Swift Testing cases each launch the built demo and assert the real
+Objective-C/Foundation output. The target intentionally does not directly
+depend on `ObjCDemoKit`: SwiftPM's generated test-discovery targets do not yet
+inherit the target-scoped GNUstep Objective-C importer flags.
+
+The intended toolchain experience is:
+
+```sh
+swift build
+swift run GNUstepObjCDemo
+swift test
+```
+
+The matching SwiftPM-enabled `toolchain-docker` workspace installs
+`swift-package`, `swift-build`, `swift-run`, `swift-test`, LLBuild, IndexStore,
+XCTest, Swift Testing, and SwiftPM's manifest runtime. This package has been
+validated through both Debug and Release `swift build`/`swift run`/`swift test`
+workflows with that image. Existing published alpha tags may still require the
+manual runner until the updated image is released.
+
 ## Run With Local Artifacts
 
 If you have a locally built Swift toolchain and GNUstep prefix, point the example at those artifacts:
@@ -120,9 +149,14 @@ This example contains demo-side shims for the current bootstrap toolchain. They 
 
 - `DemoKit/ObjCInteropShim.c` temporarily provides missing Swift runtime Objective-C metadata entry points.
 - `DemoKit/DarwinSelectorRefs.c` registers Swift-emitted Darwin-style selector references with GNUstep/libobjc2.
-- The shared library links an ELF alias from `OBJC_CLASS_$_ObjCGreeter` to GNUstep's `._OBJC_CLASS_ObjCGreeter`.
+- The final link adds an ELF alias from `OBJC_CLASS_$_ObjCGreeter` to GNUstep's `._OBJC_CLASS_ObjCGreeter`.
 
 These shims mark the Swift runtime and IRGen work that still needs to move into the toolchain.
+
+Directly importing `ObjCDemoKit` from a SwiftPM test target is also not yet a
+supported claim. The current integration tests exercise the real executable
+boundary while generated test-target importer settings and the remaining
+runtime interop gaps are tracked separately.
 
 ## Scripts
 

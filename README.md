@@ -4,22 +4,23 @@ This repository is a self-contained smoke test for the current OpenSwiftProject 
 
 It builds a tiny Objective-C GNUstep module, imports it from Swift with
 `-enable-objc-interop -objc-runtime-vendor=gnustep`, and runs the result inside a
-Docker toolchain image. This revision requires the imported-class symbol fix in
-the Swift frontend; it no longer supplies per-class ELF linker aliases.
+Docker toolchain image. This revision requires GNUstep class-symbol and selector
+lowering in the Swift frontend; it supplies neither per-class ELF linker aliases
+nor a selector-registration shim.
 
 ## Quick Start
 
-Use a locally built image containing the GNUstep class-symbol lowering fix:
+Use a locally built image containing the GNUstep class-symbol and selector fixes:
 
 ```sh
 git clone https://github.com/OpenSwiftProject/toolchain-example.git
 cd toolchain-example
-OPEN_SWIFT_TOOLCHAIN_IMAGE=openswift/class-symbols:test ./scripts/run-demokit.sh
+OPEN_SWIFT_TOOLCHAIN_IMAGE=openswift/selectors:test ./scripts/run-demokit.sh
 ```
 
 The runner's default image is still the published alpha tag below. Older images
-without `-objc-runtime-vendor=gnustep` cannot build this revision; override the
-image until an updated toolchain is published.
+without GNUstep class-symbol and selector lowering cannot run this revision;
+override the image until an updated toolchain is published.
 
 ```text
 ghcr.io/openswiftproject/swift-gnustep-toolchain:6.3-alpha-ubuntu24-aarch64
@@ -44,6 +45,7 @@ Swift saw class: NSString
 Swift saw class: NSObject
 Swift saw: Hello from GNUstep Objective-C
 Swift saw item count: 4
+Swift verified GNUstep selectors
 ```
 
 ## Swift Package Experiment
@@ -73,7 +75,7 @@ The matching SwiftPM-enabled `toolchain-docker` workspace installs
 XCTest, Swift Testing, and SwiftPM's manifest runtime. This package has been
 validated through both Debug and Release `swift build`/`swift run`/`swift test`
 workflows with that image. Both the SwiftPM and manual runners now require a
-frontend with GNUstep class-symbol lowering; the manual runner is not a
+frontend with GNUstep class-symbol and selector lowering; the manual runner is not a
 compatibility fallback for older published images.
 
 ## Run With Local Artifacts
@@ -163,17 +165,25 @@ runtime-metadata path, not coverage of direct class-symbol lowering.
 This example contains demo-side shims for the current bootstrap toolchain. They are intentionally visible:
 
 - `DemoKit/ObjCInteropShim.c` temporarily provides missing Swift runtime Objective-C metadata entry points.
-- `DemoKit/DarwinSelectorRefs.c` registers Swift-emitted Darwin-style selector references with GNUstep/libobjc2.
 
 Per-class `--defsym` aliases are no longer used. The GNUstep frontend mode loads
 the `._OBJC_REF_CLASS_*` slots exported by Clang's GNUstep ABI v2 providers.
 
-These shims mark the Swift runtime and IRGen work that still needs to move into the toolchain.
+`DarwinSelectorRefs.c` is also removed. The compiler emits writable GNUstep
+selector records in `__objc_selectors`, registered by the Clang-generated image
+initializer. Class/instance messages, property getters/setters, multi-argument
+selectors, and repeated selectors in separate Swift source files are exercised.
+
+Source-level `#selector` also requires the Swift `ObjectiveC` module/overlay,
+which this Linux toolchain does not yet install. Native selector literal IR is
+covered separately; this example does not claim the complete Darwin Selector API.
+
+The remaining runtime shim marks the metadata work still needed in the toolchain.
 
 SwiftPM keeps `OPEN_SWIFT_DEMOKIT_FACTORY_ISOLATION` enabled, using
 `MakeObjCGreeter()` for allocation while runtime metadata support is incomplete.
 The manual runner uses direct Swift `ObjCGreeter()` allocation, which also passes
-with the two remaining shims. This limited result does not establish general
+with the remaining runtime shim. This limited result does not establish general
 runtime metadata correctness or support for Swift-defined `@objc` classes and
 subclasses.
 

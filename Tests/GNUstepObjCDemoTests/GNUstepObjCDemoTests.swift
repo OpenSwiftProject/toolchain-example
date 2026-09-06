@@ -36,6 +36,7 @@ private func outputContainsExpectedValues(_ output: String) -> Bool {
     && output.contains("Swift saw class: ObjCGreeter")
     && output.contains("Swift saw class: NSString")
     && output.contains("Swift saw class: NSObject")
+    && output.contains("Swift verified GNUstep selectors")
 }
 
 @Test("Swift Testing runs the GNUstep Objective-C demo")

@@ -37,8 +37,6 @@ let package = Package(
         "ObjCGreeter.m",
         // Known runtime workaround tracked by OpenSwiftProject/swift#2.
         "ObjCInteropShim.c",
-        // Known selector ABI/IRGen workaround tracked by OpenSwiftProject/swift#3.
-        "DarwinSelectorRefs.c",
       ],
       publicHeadersPath: ".",
       cSettings: [

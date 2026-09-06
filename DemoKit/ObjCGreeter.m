@@ -23,6 +23,14 @@
   return [_items count];
 }
 
++ (const char *)classMessageCString {
+  return "GNUstep class selector";
+}
+
+- (NSUInteger)add:(NSUInteger)lhs to:(NSUInteger)rhs {
+  return lhs + rhs;
+}
+
 - (void)logFoundationObjects {
   void (^logger)(NSString *) = ^(NSString *label) {
     NSLog(@"%@: %@ (%lu items)", label, _message, (unsigned long)[_items count]);

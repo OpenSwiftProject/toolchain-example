@@ -1,4 +1,5 @@
 #import "ObjCGreeter.h"
+#import <objc/runtime.h>
 
 @implementation ObjCGreeter {
   NSString *_message;
@@ -35,3 +36,6 @@ ObjCGreeter *MakeObjCGreeter(void) {
   return [[ObjCGreeter alloc] init];
 }
 
+const char *ObjCDemoClassName(Class cls) {
+  return class_getName(cls);
+}

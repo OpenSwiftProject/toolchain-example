@@ -52,7 +52,10 @@ let package = Package(
       swiftSettings: [
         // Cross-cutting allocation gate tracked by swift#2 and swift#3.
         .define("OPEN_SWIFT_DEMOKIT_FACTORY_ISOLATION"),
-        .unsafeFlags(["-Xfrontend", "-enable-objc-interop"] + clangImporterFlags),
+        .unsafeFlags([
+          "-Xfrontend", "-enable-objc-interop",
+          "-Xfrontend", "-objc-runtime-vendor=gnustep",
+        ] + clangImporterFlags),
       ],
       linkerSettings: [
         .unsafeFlags([
@@ -60,8 +63,6 @@ let package = Package(
           "-Xlinker", "-rpath",
           "-Xlinker", "\(gnustepPrefix)/lib",
           "-Xlinker", "--export-dynamic",
-          // Known class-symbol lowering workaround tracked by swift#3.
-          "-Xlinker", "--defsym=OBJC_CLASS_$_ObjCGreeter=._OBJC_CLASS_ObjCGreeter",
         ]),
         .linkedLibrary("gnustep-base"),
         .linkedLibrary("objc"),

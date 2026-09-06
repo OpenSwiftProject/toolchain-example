@@ -55,12 +55,6 @@ echo "== Build Objective-C demo library =="
   -o "$BUILD_DIR/ObjCInteropShim.o"
 
 "$TOOLCHAIN/bin/clang" \
-  -fPIC \
-  -I"$PREFIX/include" \
-  -c "$DEMO_DIR/DarwinSelectorRefs.c" \
-  -o "$BUILD_DIR/DarwinSelectorRefs.o"
-
-"$TOOLCHAIN/bin/clang" \
   -shared "$BUILD_DIR/ObjCGreeter.o" "$BUILD_DIR/ObjCInteropShim.o" \
   -o "$BUILD_DIR/libObjCDemoKit.so" \
   $BASELIBS \
@@ -99,7 +93,7 @@ echo "== Build Swift executable =="
   -Xlinker "$BUILD_DIR" \
   -Xlinker -rpath \
   -Xlinker "$PREFIX/lib" \
-  "$BUILD_DIR/DarwinSelectorRefs.o" \
+  "$ROOT_DIR/Sources/GNUstepObjCDemo/SelectorChecks.swift" \
   "$ROOT_DIR/Sources/GNUstepObjCDemo/main.swift" \
   -o "$BUILD_DIR/GNUstepObjCDemo"
 

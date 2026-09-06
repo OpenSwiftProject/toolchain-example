@@ -25,3 +25,4 @@ if let message = greeter.messageCString() {
 }
 
 print("Swift saw item count:", greeter.itemCount())
+checkSelectors(greeter)

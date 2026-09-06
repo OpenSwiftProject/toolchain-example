@@ -68,7 +68,6 @@ echo "== Build Objective-C demo library =="
   -lobjc \
   -lBlocksRuntime \
   -ldispatch \
-  '-Wl,--defsym=OBJC_CLASS_$_ObjCGreeter=._OBJC_CLASS_ObjCGreeter' \
   -Wl,-rpath,"$PREFIX/lib"
 
 read -r -a OBJCFLAG_ARRAY <<< "$OBJCFLAGS"
@@ -80,6 +79,7 @@ done
 echo "== Build Swift executable =="
 "$TOOLCHAIN/bin/swiftc" \
   -Xfrontend -enable-objc-interop \
+  -Xfrontend -objc-runtime-vendor=gnustep \
   -I "$DEMO_DIR" \
   -I "$BUILD_DIR" \
   "${SWIFT_XCC[@]}" \
